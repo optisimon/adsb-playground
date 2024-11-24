@@ -70,7 +70,7 @@ if __name__ == "__main__":
                         seconds = d.seconds + d.days*86400 + d.microseconds/1e6
 
                         if seconds > 86400:
-                            print("New day - time for new log file - trying to terminate")
+                            print("New day - time for new log file - trying to terminate", file=sys.stderr)
                             proc.terminate()
                             if not proc.wait(timeout=5):
                                 proc.kill()
@@ -84,11 +84,11 @@ if __name__ == "__main__":
                             old_seconds = d.seconds
 
                     except subprocess.TimeoutExpired as e:
-                        print("Could not terminate, trying kill")
+                        print("Could not terminate, trying kill", file=sys.stderr)
                         proc.kill()
                         time.sleep(2)
                         break;
 
                     except Exception as e:
-                        out(str(e))
-                        raise
+                        print(f"# Got exception processing line {repr(reading)}", file=sys.stderr)
+                        logfile.write(f"{repr(e)}")
